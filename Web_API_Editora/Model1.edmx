@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="EditoraModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Autores">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="nome" Type="nvarchar" MaxLength="50" />
+          <Property Name="sobrenome" Type="nvarchar" MaxLength="50" />
+          <Property Name="email" Type="nvarchar" MaxLength="50" />
+          <Property Name="dt_nascimeto" Type="date" />
+        </EntityType>
+        <EntityType Name="livro_autor">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="id_livro" Type="int" Nullable="false" />
+          <Property Name="id_autor" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Livros">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="titulo" Type="nvarchar" MaxLength="50" />
+          <Property Name="isbn" Type="nvarchar" MaxLength="50" />
+          <Property Name="ano" Type="int" />
+        </EntityType>
+        <Association Name="FK_BOOKAUTOR_AUTOR">
+          <End Role="Autores" Type="Self.Autores" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="livro_autor" Type="Self.livro_autor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Autores">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="livro_autor">
+              <PropertyRef Name="id_autor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BOOKAUTOR_BOOK">
+          <End Role="Livros" Type="Self.Livros" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="livro_autor" Type="Self.livro_autor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Livros">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="livro_autor">
+              <PropertyRef Name="id_livro" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EditoraModelStoreContainer">
+          <EntitySet Name="Autores" EntityType="Self.Autores" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="livro_autor" EntityType="Self.livro_autor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Livros" EntityType="Self.Livros" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_BOOKAUTOR_AUTOR" Association="Self.FK_BOOKAUTOR_AUTOR">
+            <End Role="Autores" EntitySet="Autores" />
+            <End Role="livro_autor" EntitySet="livro_autor" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BOOKAUTOR_BOOK" Association="Self.FK_BOOKAUTOR_BOOK">
+            <End Role="Livros" EntitySet="Livros" />
+            <End Role="livro_autor" EntitySet="livro_autor" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="EditoraModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Autores">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="nome" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="sobrenome" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="dt_nascimeto" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="livro_autor" Relationship="Self.FK_BOOKAUTOR_AUTOR" FromRole="Autores" ToRole="livro_autor" />
+        </EntityType>
+        <EntityType Name="livro_autor">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="id_livro" Type="Int32" Nullable="false" />
+          <Property Name="id_autor" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Autores" Relationship="Self.FK_BOOKAUTOR_AUTOR" FromRole="livro_autor" ToRole="Autores" />
+          <NavigationProperty Name="Livros" Relationship="Self.FK_BOOKAUTOR_BOOK" FromRole="livro_autor" ToRole="Livros" />
+        </EntityType>
+        <EntityType Name="Livros">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="titulo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="isbn" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ano" Type="Int32" />
+          <NavigationProperty Name="livro_autor" Relationship="Self.FK_BOOKAUTOR_BOOK" FromRole="Livros" ToRole="livro_autor" />
+        </EntityType>
+        <Association Name="FK_BOOKAUTOR_AUTOR">
+          <End Role="Autores" Type="Self.Autores" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="livro_autor" Type="Self.livro_autor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Autores">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="livro_autor">
+              <PropertyRef Name="id_autor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BOOKAUTOR_BOOK">
+          <End Role="Livros" Type="Self.Livros" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="livro_autor" Type="Self.livro_autor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Livros">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="livro_autor">
+              <PropertyRef Name="id_livro" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EditoraEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Autores" EntityType="Self.Autores" />
+          <EntitySet Name="livro_autor" EntityType="Self.livro_autor" />
+          <EntitySet Name="Livros" EntityType="Self.Livros" />
+          <AssociationSet Name="FK_BOOKAUTOR_AUTOR" Association="Self.FK_BOOKAUTOR_AUTOR">
+            <End Role="Autores" EntitySet="Autores" />
+            <End Role="livro_autor" EntitySet="livro_autor" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BOOKAUTOR_BOOK" Association="Self.FK_BOOKAUTOR_BOOK">
+            <End Role="Livros" EntitySet="Livros" />
+            <End Role="livro_autor" EntitySet="livro_autor" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="EditoraModelStoreContainer" CdmEntityContainer="EditoraEntities">
+          <EntitySetMapping Name="Autores">
+            <EntityTypeMapping TypeName="EditoraModel.Autores">
+              <MappingFragment StoreEntitySet="Autores">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="nome" ColumnName="nome" />
+                <ScalarProperty Name="sobrenome" ColumnName="sobrenome" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="dt_nascimeto" ColumnName="dt_nascimeto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="livro_autor">
+            <EntityTypeMapping TypeName="EditoraModel.livro_autor">
+              <MappingFragment StoreEntitySet="livro_autor">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="id_livro" ColumnName="id_livro" />
+                <ScalarProperty Name="id_autor" ColumnName="id_autor" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Livros">
+            <EntityTypeMapping TypeName="EditoraModel.Livros">
+              <MappingFragment StoreEntitySet="Livros">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="titulo" ColumnName="titulo" />
+                <ScalarProperty Name="isbn" ColumnName="isbn" />
+                <ScalarProperty Name="ano" ColumnName="ano" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
